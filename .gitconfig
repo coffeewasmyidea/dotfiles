@@ -1,0 +1,51 @@
+[user]
+    name = "Sergey Silaev"
+    email = "hello@8am.dev"
+[core]
+    autocrlf = false
+    precomposeunicode = true
+    editor = /usr/bin/nvim
+    filemode = false
+[gpg]
+    program = gpg2
+[alias]
+    st = status -b
+    c = commit
+    co = checkout
+    br = branch
+    cp = cherry-pick
+    cps = cherry-pick -s
+    branches = branch -vv
+    slog = log --pretty=format:"%C(auto)%h%C(auto)%d\\ %C(auto,reset)%s\\ \\ [%C(auto,blue)%an%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)]"
+    glog = log --graph --pretty=format:"%C(auto,yellow)%h%C(auto)%d\\ %C(auto,reset)%s\\ \\ [%C(auto,blue)%an%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)]"
+    wlog = log --pretty=format:"%C(auto,yellow)%h%C(auto)%d%C(auto,reset)\\ by\\ %C(auto,blue)%an%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)%n\\ %s%n" --stat
+    wdiff = diff --word-diff=color
+    wshow = show --word-diff=color
+    gr = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+[diff]
+    algorithmtool = patience
+    tool = meld
+[difftool]
+    prompt = false
+[push]
+    default = current
+[pull]
+    rebase = false
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+    ui = true
+    pager = true
+[color "status"]
+    added = green
+    changed = red bold
+    untracked = magenta bold
+[color "branch"]
+    remote = yellow
+[filter "lfs"]
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
