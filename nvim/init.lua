@@ -25,6 +25,7 @@ vim.g.netrw_banner = 0
 vim.g.netrw_browse_split = 0
 vim.g.netrw_altv = 1
 vim.g.netrw_liststyle = 3
+vim.g.netrw_winsize = 20
 
 -- better whitespace
 vim.g.better_whitespace_enabled = 1
@@ -41,9 +42,8 @@ vim.g.strip_max_file_size = 1000
 vim.g.netrw_liststyle = 3
 
 -- colorscheme
-vim.cmd("colorscheme gruvbox")
-vim.g.gruvbox_invert_selection = "0"
-vim.opt.background = "dark"
+vim.cmd("colorscheme PaperColor")
+vim.opt.background = "light"
 
 -- copy/paste
 vim.opt.clipboard = "unnamedplus"
@@ -64,76 +64,181 @@ require("nvim-lsp-installer").setup({
     }
 })
 
--- lsp
-local nvim_lsp = require("lspconfig")
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+-- mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+local opts = { noremap = true, silent = true }
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+vim.keymap.set('n', '<space>di', vim.diagnostic.disable, opts)
+vim.keymap.set('n', '<space>en', vim.diagnostic.enable, opts)
 
-local on_attach = function(_, bufnr)
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+    -- Enable completion triggered by <c-x><c-o>
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+    -- Mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local bufopts = { noremap = true, silent = true, buffer = bufnr }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+    vim.keymap.set('n', '<space>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, bufopts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+    vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+    vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
 end
 
-local servers = {
-    "clangd",
-    "pyright",
-    "gopls",
-    "tsserver",
-    "sumneko_lua",
-    "dockerls",
-    "rust_analyzer",
-    "sqlls"
+local lsp_flags = {
+    -- This is the default in Nvim 0.7+
+    debounce_text_changes = 150,
 }
 
-for _, lsp in ipairs(servers) do
-    if lsp == "sumneko_lua" then
-        nvim_lsp[lsp].setup {
-            on_attach = on_attach,
-            capabilities = capabilities,
-            settings = {
-                Lua = {
-                    diagnostics = {
-                    globals = { "vim" },
-                }
-            }
+require('lspconfig')['clangd'].setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
+    settings = {
+        ["clangd"] = {}
+    }
+}
+
+require('lspconfig')['pyright'].setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
+    settings = {
+        python = {
+            analysis = {
+                autoSearchPaths = false,
+                diagnosticMode = "openFilesOnly",
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = "basic",
+            },
+        },
+    }
+}
+
+require('lspconfig')['rust_analyzer'].setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
+    settings = {
+        ["rust-analyzer"] = {}
+    }
+}
+
+require('lspconfig')['sumneko_lua'].setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
+    settings = {
+        Lua = {
+            diagnostics = { globals = { "vim" }, }
         }
     }
-    elseif lsp == "pyright" then
-        nvim_lsp[lsp].setup {
-            on_attach = on_attach,
-            settings = {
-                python = {
-                    analysis = {
-                        autoSearchPaths = true,
-                        diagnosticMode = "openFilesOnly",
-                        useLibraryCodeForTypes = true,
-                        typeCheckingMode = "basic",
-                    },
-                },
-            },
-            capabilities = capabilities
+}
+
+require('lspconfig')['gopls'].setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
+    settings = {
+        ["gopls"] = {}
     }
-    else
-        nvim_lsp[lsp].setup {
-        on_attach = on_attach,
-        capabilities = capabilities
+}
+
+require('lspconfig')['sqlls'].setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
+    settings = {
+        ["sqlls"] = {}
     }
-    end
-end
+}
+
+require('lspconfig')['dockerls'].setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
+    settings = {
+        ["dockerls"] = {}
+    }
+}
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+    virtual_text = true,
+    signs = true,
+    update_in_insert = true,
+    underline = true,
+    severity_sort = true,
+}
+)
+
+-- F keys
+vim.keymap.set("n", "<F5>", ":Black<CR>")
+vim.keymap.set("n", "<F8>", ":TagbarToggle<CR>")
+
+-- fzf
+vim.keymap.set("n", "<C-p>", ":FZF<CR>")
+vim.keymap.set("n", "<C-f>", ":Rg<CR>")
+
+-- resize
+vim.keymap.set("n", "<M-Down>", ":resize +4<CR>")
+vim.keymap.set("n", "<M-Up>", ":resize -4<CR>")
+vim.keymap.set("n", "<M-Right>", ":vertical resize +4<CR>")
+vim.keymap.set("n", "<M-Left>", ":vertical resize -4<CR>")
+vim.keymap.set("n", "<Leader>}", "ysiw")
+
+-- navigate 4x faster when holding down Ctrl
+vim.keymap.set("n", "<C-j>", "4j")
+vim.keymap.set("n", "<C-k>", "4k")
+vim.keymap.set("n", "<C-l>", "4l")
+vim.keymap.set("n", "<C-h>", "4h")
+vim.keymap.set("n", "<C-Down>", "4<Down>")
+vim.keymap.set("n", "<C-Up>", "4<Up>")
+vim.keymap.set("n", "<C-Left>", "b")
+vim.keymap.set("n", "<C-Right>", "e")
+
+-- for visual mode: x[nore]map
+vim.keymap.set("x", "<C-j>", "4j")
+vim.keymap.set("x", "<C-k>", "4k")
+vim.keymap.set("x", "<C-h>", "4h")
+vim.keymap.set("x", "<C-l>", "4l")
+vim.keymap.set("x", "<C-Down>", "4<Down>")
+vim.keymap.set("x", "<C-Up>", "4<Up>")
+vim.keymap.set("x", "<C-Left>", "b")
+vim.keymap.set("x", "<C-Right>", "e")
+
+-- noh
+vim.keymap.set("n", "<Leader><space>", ":noh<CR>")
+
+-- find and replace
+vim.keymap.set("n", "S", ":%s//g<Left><Left>")
+
+-- git
+vim.keymap.set('n', '<Leader>b', ":Git blame<CR>")
+
+-- explore
+vim.keymap.set('n', '<Leader>e', ":Rexplore<CR>")
+vim.keymap.set('n', '<Leader>s', ":Vexplore<CR>")
+vim.keymap.set('n', '<Leader>S', ":Hexplore<CR>")
+vim.keymap.set('n', '<Leader>T', ":Texplore<CR>")
 
 -- completion config
 local cmp = require('cmp')
+local lspkind = require('lspkind')
+
 cmp.setup({
     sources = {
       { name = 'nvim_lsp' },
-      { name = 'ultisnips' },
       { name = 'buffer' },
       { name = 'nvim_lsp_signature_help' },
-    },
-    snippet = {
-      expand = function(args)
-        -- For `ultisnips` user.
-        vim.fn["UltiSnips#Anon"](args.body)
-      end,
     },
     mapping = {
       ['<CR>'] = cmp.mapping.confirm({ select = false }),
@@ -152,226 +257,134 @@ cmp.setup({
           end
       end,
     },
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = 'symbol', -- show only symbol annotations
+      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+    })
+  }
 })
-
--- mappings
-local function map(mode, lhs, rhs, opts)
-  local options = { noremap=true, silent=true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-end
-
--- F keys
-map("n", "<F5>", ":Black<CR>")
-map("n", "<F8>", ":TagbarToggle<CR>")
-
--- fzf
-map("n", "<C-p>", ":FZF<CR>")
-map("n", "<C-f>", ":Rg<CR>")
-
--- resize
-map("n", "<M-Down>", ":resize +4<CR>")
-map("n", "<M-Up>", ":resize -4<CR>")
-map("n", "<M-Right>", ":vertical resize +4<CR>")
-map("n", "<M-Left>", ":vertical resize -4<CR>")
-map("n", "<Leader>}", "ysiw")
-
--- navigate 4x faster when holding down Ctrl
-map("n", "<C-j>", "4j")
-map("n", "<C-k>", "4k")
-map("n", "<C-l>", "4l")
-map("n", "<C-h>", "4h")
-map("n", "<C-Down>", "4<Down>")
-map("n", "<C-Up>", "4<Up>")
-map("n", "<C-Left>", "b")
-map("n", "<C-Right>", "e")
-
--- for visual mode: x[nore]map
-map("x", "<C-j>", "4j")
-map("x", "<C-k>", "4k")
-map("x", "<C-h>", "4h")
-map("x", "<C-l>", "4l")
-map("x", "<C-Down>", "4<Down>")
-map("x", "<C-Up>", "4<Up>")
-map("x", "<C-Left>", "b")
-map("x", "<C-Right>", "e")
-
--- noh
-map("n", "<Leader><space>", ":noh<CR>")
-
--- find and replace
-map("n", "S", ":%s//g<Left><Left>")
-
--- See `:help vim.lsp.*` for documentation on any of the below functions
-map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>")
-map('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
-map('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>')
-map('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
-map('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
-map('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>')
-map('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>')
-map('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>')
-map('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
-map('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
-map('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-map('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
-map('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>')
-map('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>')
-map('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>')
-map('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>')
-map('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
-
--- git
-map('n', '<Leader>b', ":Git blame<CR>")
-
--- Explore
-map('n', '<Leader>e', ":Rexplore<CR>")
-map('n', '<Leader>t', ":Texplore<CR>")
-map('n', '<Leader>s', ":Vexplore<CR>")
-map('n', '<Leader>S', ":Hexplore<CR>")
-
--- trouble setup
-require("trouble").setup {icons=false}
-
-vim.api.nvim_set_keymap("n", "<leader>xd", "<cmd>Trouble<cr>",
-    {silent = true, noremap = true}
-)
-vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble document_diagnostics<cr>",
-    {silent = true, noremap = true}
-)
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-        virtual_text = false,
-        signs = false,
-        update_in_insert = false,
-        underline = false,
-        severity_sort = false,
-    }
-)
 
 local actions = require("diffview.actions")
 
 require("diffview").setup({
-  diff_binaries = false,    -- Show diffs for binaries
-  enhanced_diff_hl = false, -- See ':h diffview-config-enhanced_diff_hl'
-  git_cmd = { "git" },      -- The git executable followed by default args.
-  use_icons = true,         -- Requires nvim-web-devicons
-  icons = {                 -- Only applies when use_icons is true.
-    folder_closed = "",
-    folder_open = "",
-  },
-  signs = {
-    fold_closed = "",
-    fold_open = "",
-  },
-  file_panel = {
-    listing_style = "tree",             -- One of 'list' or 'tree'
-    tree_options = {                    -- Only applies when listing_style is 'tree'
-      flatten_dirs = true,              -- Flatten dirs that only contain one single dir
-      folder_statuses = "only_folded",  -- One of 'never', 'only_folded' or 'always'.
+    diff_binaries = false, -- Show diffs for binaries
+    enhanced_diff_hl = false, -- See ':h diffview-config-enhanced_diff_hl'
+    git_cmd = { "git" }, -- The git executable followed by default args.
+    use_icons = true, -- Requires nvim-web-devicons
+    icons = { -- Only applies when use_icons is true.
+        folder_closed = "",
+        folder_open = "",
     },
-    win_config = {                      -- See ':h diffview-config-win_config'
-      position = "left",
-      width = 35,
-    },
-  },
-  file_history_panel = {
-    log_options = {   -- See ':h diffview-config-log_options'
-      single_file = {
-        diff_merges = "combined",
-      },
-      multi_file = {
-        diff_merges = "first-parent",
-      },
-    },
-    win_config = {    -- See ':h diffview-config-win_config'
-      position = "bottom",
-      height = 16,
-    },
-  },
-  commit_log_panel = {
-    win_config = {},  -- See ':h diffview-config-win_config'
-  },
-  default_args = {    -- Default args prepended to the arg-list for the listed commands
-    DiffviewOpen = {},
-    DiffviewFileHistory = {},
-  },
-  hooks = {},         -- See ':h diffview-config-hooks'
-  keymaps = {
-    disable_defaults = false, -- Disable the default keymaps
-    view = {
-      -- The `view` bindings are active in the diff buffers, only when the current
-      -- tabpage is a Diffview.
-      ["<tab>"]      = actions.select_next_entry, -- Open the diff for the next file
-      ["<s-tab>"]    = actions.select_prev_entry, -- Open the diff for the previous file
-      ["gf"]         = actions.goto_file,         -- Open the file in a new split in the previous tabpage
-      ["<C-w><C-f>"] = actions.goto_file_split,   -- Open the file in a new split
-      ["<C-w>gf"]    = actions.goto_file_tab,     -- Open the file in a new tabpage
-      ["<leader>e"]  = actions.focus_files,       -- Bring focus to the files panel
-      ["<leader>b"]  = actions.toggle_files,      -- Toggle the files panel.
+    signs = {
+        fold_closed = "",
+        fold_open = "",
     },
     file_panel = {
-      ["j"]             = actions.next_entry,         -- Bring the cursor to the next file entry
-      ["<down>"]        = actions.next_entry,
-      ["k"]             = actions.prev_entry,         -- Bring the cursor to the previous file entry.
-      ["<up>"]          = actions.prev_entry,
-      ["<cr>"]          = actions.select_entry,       -- Open the diff for the selected entry.
-      ["o"]             = actions.select_entry,
-      ["<2-LeftMouse>"] = actions.select_entry,
-      ["-"]             = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
-      ["S"]             = actions.stage_all,          -- Stage all entries.
-      ["U"]             = actions.unstage_all,        -- Unstage all entries.
-      ["X"]             = actions.restore_entry,      -- Restore entry to the state on the left side.
-      ["R"]             = actions.refresh_files,      -- Update stats and entries in the file list.
-      ["L"]             = actions.open_commit_log,    -- Open the commit log panel.
-      ["<c-b>"]         = actions.scroll_view(-0.25), -- Scroll the view up
-      ["<c-f>"]         = actions.scroll_view(0.25),  -- Scroll the view down
-      ["<tab>"]         = actions.select_next_entry,
-      ["<s-tab>"]       = actions.select_prev_entry,
-      ["gf"]            = actions.goto_file,
-      ["<C-w><C-f>"]    = actions.goto_file_split,
-      ["<C-w>gf"]       = actions.goto_file_tab,
-      ["i"]             = actions.listing_style,        -- Toggle between 'list' and 'tree' views
-      ["f"]             = actions.toggle_flatten_dirs,  -- Flatten empty subdirectories in tree listing style.
-      ["<leader>e"]     = actions.focus_files,
-      ["<leader>b"]     = actions.toggle_files,
+        listing_style = "tree", -- One of 'list' or 'tree'
+        tree_options = { -- Only applies when listing_style is 'tree'
+            flatten_dirs = true, -- Flatten dirs that only contain one single dir
+            folder_statuses = "only_folded", -- One of 'never', 'only_folded' or 'always'.
+        },
+        win_config = { -- See ':h diffview-config-win_config'
+            position = "left",
+            width = 35,
+        },
     },
     file_history_panel = {
-      ["g!"]            = actions.options,          -- Open the option panel
-      ["<C-A-d>"]       = actions.open_in_diffview, -- Open the entry under the cursor in a diffview
-      ["y"]             = actions.copy_hash,        -- Copy the commit hash of the entry under the cursor
-      ["L"]             = actions.open_commit_log,
-      ["zR"]            = actions.open_all_folds,
-      ["zM"]            = actions.close_all_folds,
-      ["j"]             = actions.next_entry,
-      ["<down>"]        = actions.next_entry,
-      ["k"]             = actions.prev_entry,
-      ["<up>"]          = actions.prev_entry,
-      ["<cr>"]          = actions.select_entry,
-      ["o"]             = actions.select_entry,
-      ["<2-LeftMouse>"] = actions.select_entry,
-      ["<c-b>"]         = actions.scroll_view(-0.25),
-      ["<c-f>"]         = actions.scroll_view(0.25),
-      ["<tab>"]         = actions.select_next_entry,
-      ["<s-tab>"]       = actions.select_prev_entry,
-      ["gf"]            = actions.goto_file,
-      ["<C-w><C-f>"]    = actions.goto_file_split,
-      ["<C-w>gf"]       = actions.goto_file_tab,
-      ["<leader>e"]     = actions.focus_files,
-      ["<leader>b"]     = actions.toggle_files,
+        log_options = { -- See ':h diffview-config-log_options'
+            single_file = {
+                diff_merges = "combined",
+            },
+            multi_file = {
+                diff_merges = "first-parent",
+            },
+        },
+        win_config = { -- See ':h diffview-config-win_config'
+            position = "bottom",
+            height = 16,
+        },
     },
-    option_panel = {
-      ["<tab>"] = actions.select_entry,
-      ["q"]     = actions.close,
+    commit_log_panel = {
+        win_config = {}, -- See ':h diffview-config-win_config'
     },
-  },
+    default_args = { -- Default args prepended to the arg-list for the listed commands
+        DiffviewOpen = {},
+        DiffviewFileHistory = {},
+    },
+    hooks = {}, -- See ':h diffview-config-hooks'
+    keymaps = {
+        disable_defaults = false, -- Disable the default keymaps
+        view = {
+            -- The `view` bindings are active in the diff buffers, only when the current
+            -- tabpage is a Diffview.
+            ["<tab>"]      = actions.select_next_entry, -- Open the diff for the next file
+            ["<s-tab>"]    = actions.select_prev_entry, -- Open the diff for the previous file
+            ["gf"]         = actions.goto_file, -- Open the file in a new split in the previous tabpage
+            ["<C-w><C-f>"] = actions.goto_file_split, -- Open the file in a new split
+            ["<C-w>gf"]    = actions.goto_file_tab, -- Open the file in a new tabpage
+            ["<leader>e"]  = actions.focus_files, -- Bring focus to the files panel
+            ["<leader>b"]  = actions.toggle_files, -- Toggle the files panel.
+        },
+        file_panel = {
+            ["j"]             = actions.next_entry, -- Bring the cursor to the next file entry
+            ["<down>"]        = actions.next_entry,
+            ["k"]             = actions.prev_entry, -- Bring the cursor to the previous file entry.
+            ["<up>"]          = actions.prev_entry,
+            ["<cr>"]          = actions.select_entry, -- Open the diff for the selected entry.
+            ["o"]             = actions.select_entry,
+            ["<2-LeftMouse>"] = actions.select_entry,
+            ["-"]             = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
+            ["S"]             = actions.stage_all, -- Stage all entries.
+            ["U"]             = actions.unstage_all, -- Unstage all entries.
+            ["X"]             = actions.restore_entry, -- Restore entry to the state on the left side.
+            ["R"]             = actions.refresh_files, -- Update stats and entries in the file list.
+            ["L"]             = actions.open_commit_log, -- Open the commit log panel.
+            ["<c-b>"]         = actions.scroll_view(-0.25), -- Scroll the view up
+            ["<c-f>"]         = actions.scroll_view(0.25), -- Scroll the view down
+            ["<tab>"]         = actions.select_next_entry,
+            ["<s-tab>"]       = actions.select_prev_entry,
+            ["gf"]            = actions.goto_file,
+            ["<C-w><C-f>"]    = actions.goto_file_split,
+            ["<C-w>gf"]       = actions.goto_file_tab,
+            ["i"]             = actions.listing_style, -- Toggle between 'list' and 'tree' views
+            ["f"]             = actions.toggle_flatten_dirs, -- Flatten empty subdirectories in tree listing style.
+            ["<leader>e"]     = actions.focus_files,
+            ["<leader>b"]     = actions.toggle_files,
+        },
+        file_history_panel = {
+            ["g!"]            = actions.options, -- Open the option panel
+            ["<C-A-d>"]       = actions.open_in_diffview, -- Open the entry under the cursor in a diffview
+            ["y"]             = actions.copy_hash, -- Copy the commit hash of the entry under the cursor
+            ["L"]             = actions.open_commit_log,
+            ["zR"]            = actions.open_all_folds,
+            ["zM"]            = actions.close_all_folds,
+            ["j"]             = actions.next_entry,
+            ["<down>"]        = actions.next_entry,
+            ["k"]             = actions.prev_entry,
+            ["<up>"]          = actions.prev_entry,
+            ["<cr>"]          = actions.select_entry,
+            ["o"]             = actions.select_entry,
+            ["<2-LeftMouse>"] = actions.select_entry,
+            ["<c-b>"]         = actions.scroll_view(-0.25),
+            ["<c-f>"]         = actions.scroll_view(0.25),
+            ["<tab>"]         = actions.select_next_entry,
+            ["<s-tab>"]       = actions.select_prev_entry,
+            ["gf"]            = actions.goto_file,
+            ["<C-w><C-f>"]    = actions.goto_file_split,
+            ["<C-w>gf"]       = actions.goto_file_tab,
+            ["<leader>e"]     = actions.focus_files,
+            ["<leader>b"]     = actions.toggle_files,
+        },
+        option_panel = {
+            ["<tab>"] = actions.select_entry,
+            ["q"]     = actions.close,
+        },
+    },
 })
 
 -- tree-sitter
-require'nvim-treesitter.configs'.setup {
+require 'nvim-treesitter.configs'.setup {
     -- A list of parser names, or "all"
     ensure_installed = { "python", "c", "cpp", "rust", "go", "html", "css", "lua", "sql" },
 
@@ -402,5 +415,47 @@ vim.opt.listchars:append "eol:¬"
 require("indent_blankline").setup {
     show_end_of_line = true,
     space_char_blankline = " ",
+}
+
+-- lualine
+require('lualine').setup {
+    options = {
+        icons_enabled = true,
+        theme = 'auto',
+        component_separators = { left = '', right = '' },
+        section_separators = { left = '', right = '' },
+        disabled_filetypes = {
+            statusline = {},
+            winbar = {},
+        },
+        ignore_focus = {},
+        always_divide_middle = true,
+        globalstatus = false,
+        refresh = {
+            statusline = 1000,
+            tabline = 1000,
+            winbar = 1000,
+        }
+    },
+    sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = { 'filename' },
+        lualine_x = { 'encoding', 'fileformat', 'filetype' },
+        lualine_y = { 'progress' },
+        lualine_z = { 'location' }
+    },
+    inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = { 'filename' },
+        lualine_x = { 'location' },
+        lualine_y = {},
+        lualine_z = {}
+    },
+    tabline = {},
+    winbar = {},
+    inactive_winbar = {},
+    extensions = {}
 }
 

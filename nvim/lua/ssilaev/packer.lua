@@ -1,7 +1,8 @@
 local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-    packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    packer_bootstrap = fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim',
+        install_path })
     vim.cmd [[packadd packer.nvim]]
 end
 
@@ -9,9 +10,13 @@ return require("packer").startup(function()
     use("wbthomason/packer.nvim")
 
     -- lsp
-    use("neovim/nvim-lspconfig")
     use("williamboman/nvim-lsp-installer")
-    use("folke/trouble.nvim")
+    use("neovim/nvim-lspconfig")
+    use("hrsh7th/cmp-nvim-lsp")
+    use("hrsh7th/cmp-buffer")
+    use("hrsh7th/nvim-cmp")
+    use("nvim-lua/plenary.nvim")
+    use("hrsh7th/cmp-nvim-lsp-signature-help")
 
     -- treesitter
     use("nvim-treesitter/nvim-treesitter", {
@@ -31,22 +36,14 @@ return require("packer").startup(function()
     -- serach
     use("junegunn/fzf.vim")
 
-    -- completion
+    -- statusline and dev icons
     use({
-      "hrsh7th/nvim-cmp",
-      requires = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      },
+        'nvim-lualine/lualine.nvim',
+        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     })
-    use("SirVer/ultisnips")
-    use("quangnguyen30192/cmp-nvim-ultisnips")
-    use("hrsh7th/cmp-nvim-lsp-signature-help")
-    use("nvim-lua/plenary.nvim")
 
     -- colorschemes
-    use("flazz/vim-colorschemes")
+    use("NLKNguyen/papercolor-theme")
 
     -- ingentation and whitespace
     use("lukas-reineke/indent-blankline.nvim")
@@ -54,6 +51,7 @@ return require("packer").startup(function()
 
     -- others
     use("preservim/tagbar")
+    use("onsails/lspkind-nvim")
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
