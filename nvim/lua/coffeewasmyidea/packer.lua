@@ -18,6 +18,10 @@ return require("packer").startup(function()
     use("nvim-lua/plenary.nvim")
     use("hrsh7th/cmp-nvim-lsp-signature-help")
 
+    -- vsnip
+    use("hrsh7th/cmp-vsnip")
+    use("hrsh7th/vim-vsnip")
+
     -- treesitter
     use("nvim-treesitter/nvim-treesitter", {
         run = ":TSUpdate"
@@ -48,6 +52,9 @@ return require("packer").startup(function()
     -- ingentation and whitespace
     use("lukas-reineke/indent-blankline.nvim")
     use("ntpeters/vim-better-whitespace")
+
+    -- nerdtree
+    -- use("kyazdani42/nvim-tree.lua")
 
     -- others
     use("preservim/tagbar")

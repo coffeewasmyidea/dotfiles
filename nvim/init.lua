@@ -1,4 +1,4 @@
-require("ssilaev")
+require("coffeewasmyidea")
 
 vim.opt.termguicolors = true
 vim.opt.nu = true
@@ -19,6 +19,8 @@ vim.opt.cmdheight = 1
 vim.opt.updatetime = 50
 vim.opt.completeopt = { "menuone", "noselect" }
 vim.opt.shortmess:append("c")
+-- vim.g.loaded = 1
+-- vim.g.loaded_netrwPlugin = 1
 
 -- better Netrw
 vim.g.netrw_banner = 0
@@ -32,21 +34,16 @@ vim.g.better_whitespace_enabled = 1
 vim.g.strip_whitespace_on_save = 1
 vim.g.strip_max_file_size = 1000
 
--- better whitespace blacklist
--- vim.g.better_whitespace_filetypes_blacklist = {'c', 'python', 'rs', 'lua'}
-
--- use .gitignore
--- vim.g.netrw_list_hide = (vim.fn["netrw_gitignore#Hide"]()) .. [[,\(^\|\s\s\)\zs\.\S\+]]
-
--- default to tree mode
-vim.g.netrw_liststyle = 3
-
 -- colorscheme
 vim.cmd("colorscheme PaperColor")
 vim.opt.background = "light"
 
 -- copy/paste
 vim.opt.clipboard = "unnamedplus"
+
+-- font-end things
+vim.api.nvim_exec("au BufNewFile,BufRead vim.cmd.js,*.html,*.css,*.scss set softtabstop=2", false)
+vim.api.nvim_exec("au BufNewFile,BufRead vim.cmd.js,*.html,*.css,*.scss set shiftwidth=2", false)
 
 -- python
 vim.g.python3_host_prog = "/usr/bin/python"
@@ -180,6 +177,32 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 }
 )
 
+-- nvim-tree
+-- require("nvim-tree").setup({
+--   sort_by = "case_sensitive",
+--   create_in_closed_folder = true,
+--   view = {
+--         adaptive_size = false,
+--         width = 35,
+--         side = "left",
+--   },
+--   renderer = {
+--     group_empty = true,
+--   },
+--   filters = {
+--     dotfiles = true,
+--   },
+-- })
+
+-- autoclose
+-- vim.api.nvim_create_autocmd('BufEnter', {
+--     command = "if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif",
+--     nested = true,
+-- })
+
+-- vim.keymap.set('n', '<C-n>', ":NvimTreeToggle<CR>")
+-- vim.keymap.set('n', '<C-c>', ":NvimTreeFindFile<CR>")
+
 -- F keys
 vim.keymap.set("n", "<F5>", ":Black<CR>")
 vim.keymap.set("n", "<F8>", ":TagbarToggle<CR>")
@@ -234,9 +257,16 @@ vim.keymap.set('n', '<Leader>T', ":Texplore<CR>")
 local cmp = require('cmp')
 local lspkind = require('lspkind')
 
+
 cmp.setup({
+    snippet = {
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body)
+      end,
+    },
     sources = {
       { name = 'nvim_lsp' },
+      { name = 'vsnip' },
       { name = 'buffer' },
       { name = 'nvim_lsp_signature_help' },
     },
