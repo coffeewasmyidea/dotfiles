@@ -1,7 +1,8 @@
-export TERMINAL="st"
+export TERMINAL="alacritty"
+export TERM="xterm-256color"
 export EDITOR="nvim"
 export VISUAL='nvim'
-export BROWSER="brave"
+export BROWSER="firefox"
 export PATH="$HOME/.local/bin:$PATH"
 export MOZ_USE_XINPUT2=1
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -23,6 +24,8 @@ export TIG_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/tig/config"
 export TIG_EDITOR=/usr/bin/nvim
 export PYENV_ROOT="$HOME/.local/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH=$PATH:$(go env GOPATH)/bin
+export PATH=$PATH:"$HOME/.cargo/bin"
 
 [[ "$PATH" == *"$HOME/bin:"* ]] || export PATH="$HOME/bin:$PATH"
 ! { which werf | grep -qsE "^/home/ssv/.trdl/"; } && [[ -x "$HOME/bin/trdl" ]] && source $("$HOME/bin/trdl" use werf "1.2" "stable")

@@ -1,7 +1,8 @@
 require("coffeewasmyidea")
 
-vim.opt.termguicolors = true
+vim.opt.termguicolors =true
 vim.opt.nu = true
+vim.opt.mouse = ""
 vim.opt.relativenumber = true
 vim.opt.errorbells = false
 vim.opt.tabstop = 4
@@ -19,8 +20,7 @@ vim.opt.cmdheight = 1
 vim.opt.updatetime = 50
 vim.opt.completeopt = { "menuone", "noselect" }
 vim.opt.shortmess:append("c")
--- vim.g.loaded = 1
--- vim.g.loaded_netrwPlugin = 1
+vim.opt.autochdir = false
 
 -- better Netrw
 vim.g.netrw_banner = 0
@@ -35,8 +35,28 @@ vim.g.strip_whitespace_on_save = 1
 vim.g.strip_max_file_size = 1000
 
 -- colorscheme
-vim.cmd("colorscheme PaperColor")
-vim.opt.background = "light"
+vim.o.background = 'light'
+
+local c = require('vscode.colors')
+require('vscode').setup({
+    transparent = false,
+    italic_comments = true,
+    disable_nvimtree_bg = true,
+    group_overrides = {
+        Cursor = { fg=c.vscDarkBlue, bg=c.vscLightGreen, bold=true },
+    }
+})
+
+require("bufferline").setup{
+    options = {
+      mode = "tabs",
+      numbers = "none",
+      diagnostics = false,
+      show_tab_indicators = false,
+      show_buffer_close_icons = false,
+      show_close_icon = false,
+    },
+  }
 
 -- copy/paste
 vim.opt.clipboard = "unnamedplus"
@@ -71,26 +91,12 @@ vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 vim.keymap.set('n', '<space>di', vim.diagnostic.disable, opts)
 vim.keymap.set('n', '<space>en', vim.diagnostic.enable, opts)
 
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
-    -- Enable completion triggered by <c-x><c-o>
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-    -- Mappings.
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
     vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-    vim.keymap.set('n', '<space>wl', function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, bufopts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
     vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
     vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
@@ -167,43 +173,8 @@ require('lspconfig')['dockerls'].setup {
     }
 }
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = true,
-    signs = true,
-    update_in_insert = true,
-    underline = true,
-    severity_sort = true,
-}
-)
-
--- nvim-tree
--- require("nvim-tree").setup({
---   sort_by = "case_sensitive",
---   create_in_closed_folder = true,
---   view = {
---         adaptive_size = false,
---         width = 35,
---         side = "left",
---   },
---   renderer = {
---     group_empty = true,
---   },
---   filters = {
---     dotfiles = true,
---   },
--- })
-
--- autoclose
--- vim.api.nvim_create_autocmd('BufEnter', {
---     command = "if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif",
---     nested = true,
--- })
-
--- vim.keymap.set('n', '<C-n>', ":NvimTreeToggle<CR>")
--- vim.keymap.set('n', '<C-c>', ":NvimTreeFindFile<CR>")
-
 -- F keys
+vim.keymap.set("n", "<F3>", ":set rnu! nu!<CR>")
 vim.keymap.set("n", "<F5>", ":Black<CR>")
 vim.keymap.set("n", "<F8>", ":TagbarToggle<CR>")
 
@@ -257,42 +228,41 @@ vim.keymap.set('n', '<Leader>T', ":Texplore<CR>")
 local cmp = require('cmp')
 local lspkind = require('lspkind')
 
-
 cmp.setup({
     snippet = {
-      expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body)
-      end,
+        expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+        end,
     },
     sources = {
-      { name = 'nvim_lsp' },
-      { name = 'vsnip' },
-      { name = 'buffer' },
-      { name = 'nvim_lsp_signature_help' },
+        { name = 'nvim_lsp' },
+        { name = 'vsnip' },
+        { name = 'buffer' },
+        { name = 'nvim_lsp_signature_help' },
     },
     mapping = {
-      ['<CR>'] = cmp.mapping.confirm({ select = false }),
-      ["<Tab>"] = function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          else
-            fallback()
-          end
-      end,
-      ["<S-Tab>"] = function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          else
-            fallback()
-          end
-      end,
+        ['<CR>'] = cmp.mapping.confirm({ select = false }),
+        ["<Tab>"] = function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            else
+                fallback()
+            end
+        end,
+        ["<S-Tab>"] = function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end,
     },
-  formatting = {
-    format = lspkind.cmp_format({
-      mode = 'symbol', -- show only symbol annotations
-      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-    })
-  }
+    formatting = {
+        format = lspkind.cmp_format({
+            mode = 'symbol', -- show only symbol annotations
+            maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+        })
+    }
 })
 
 local actions = require("diffview.actions")
@@ -413,79 +383,22 @@ require("diffview").setup({
     },
 })
 
+vim.opt.list = true
+
 -- tree-sitter
 require 'nvim-treesitter.configs'.setup {
-    -- A list of parser names, or "all"
     ensure_installed = { "python", "c", "cpp", "rust", "go", "html", "css", "lua", "sql" },
-
-    -- Install parsers synchronously (only applied to `ensure_installed`)
     sync_install = false,
-
-    -- Automatically install missing parsers when entering buffer
     auto_install = true,
-
-    -- List of parsers to ignore installing (for "all")
     ignore_install = { "javascript" },
 
     highlight = {
-        -- `false` will disable the whole extension
         enable = true,
-        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-        -- Using this option may slow down your editor, and you may see some duplicate highlights.
-        -- Instead of true it can also be a list of languages
         additional_vim_regex_highlighting = false,
     },
 }
-
-vim.opt.list = true
-vim.opt.listchars:append "space:."
-vim.opt.listchars:append "eol:¬"
 
 require("indent_blankline").setup {
     show_end_of_line = true,
     space_char_blankline = " ",
 }
-
--- lualine
-require('lualine').setup {
-    options = {
-        icons_enabled = true,
-        theme = 'auto',
-        component_separators = { left = '', right = '' },
-        section_separators = { left = '', right = '' },
-        disabled_filetypes = {
-            statusline = {},
-            winbar = {},
-        },
-        ignore_focus = {},
-        always_divide_middle = true,
-        globalstatus = false,
-        refresh = {
-            statusline = 1000,
-            tabline = 1000,
-            winbar = 1000,
-        }
-    },
-    sections = {
-        lualine_a = { 'mode' },
-        lualine_b = { 'branch', 'diff', 'diagnostics' },
-        lualine_c = { 'filename' },
-        lualine_x = { 'encoding', 'fileformat', 'filetype' },
-        lualine_y = { 'progress' },
-        lualine_z = { 'location' }
-    },
-    inactive_sections = {
-        lualine_a = {},
-        lualine_b = {},
-        lualine_c = { 'filename' },
-        lualine_x = { 'location' },
-        lualine_y = {},
-        lualine_z = {}
-    },
-    tabline = {},
-    winbar = {},
-    inactive_winbar = {},
-    extensions = {}
-}
-

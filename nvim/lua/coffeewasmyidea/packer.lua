@@ -22,13 +22,6 @@ return require("packer").startup(function()
     use("hrsh7th/cmp-vsnip")
     use("hrsh7th/vim-vsnip")
 
-    -- treesitter
-    use("nvim-treesitter/nvim-treesitter", {
-        run = ":TSUpdate"
-    })
-    use("nvim-treesitter/playground")
-    use("romgrk/nvim-treesitter-context")
-
     -- git
     use("airblade/vim-gitgutter")
     use("sindrets/diffview.nvim")
@@ -40,21 +33,22 @@ return require("packer").startup(function()
     -- serach
     use("junegunn/fzf.vim")
 
-    -- statusline and dev icons
-    use({
-        'nvim-lualine/lualine.nvim',
-        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    -- treesitter
+    use("nvim-treesitter/nvim-treesitter", {
+        run = ":TSUpdate"
     })
+    use("nvim-treesitter/playground")
+    use("romgrk/nvim-treesitter-context")
 
     -- colorschemes
-    use("NLKNguyen/papercolor-theme")
+    use('Mofiqul/vscode.nvim')
+
+    -- bufferline
+    use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'kyazdani42/nvim-web-devicons'}
 
     -- ingentation and whitespace
     use("lukas-reineke/indent-blankline.nvim")
     use("ntpeters/vim-better-whitespace")
-
-    -- nerdtree
-    -- use("kyazdani42/nvim-tree.lua")
 
     -- others
     use("preservim/tagbar")

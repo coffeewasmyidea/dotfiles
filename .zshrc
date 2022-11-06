@@ -1,5 +1,5 @@
-HISTSIZE=50000
-SAVEHIST=50000
+export HISTFILESIZE=10000000
+export HISTSIZE=10000000
 
 export ZSH="${XDG_CONFIG_HOME:-$HOME/.config}/.oh-my-zsh"
 export ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/ohmyzsh"
@@ -18,9 +18,9 @@ alias ip='ip -color=auto'
 alias nc='ncmpcpp'
 alias mpv_cam='mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0'
 alias gpg-tui='gpg-tui -s colored'
-# alias vim="nvim"
 alias tn="tmux -u -f $TMUX_CONFIG new"
 alias ta="tmux -u -f $TMUX_CONFIG attach"
+alias git-sync=~/bin/git-sync.sh
 
 export PATH="$PYENV_ROOT/bin:$PATH"
 
