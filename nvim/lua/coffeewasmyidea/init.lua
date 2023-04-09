@@ -1,1 +1,0 @@
-require("coffeewasmyidea.packer")
