@@ -1,6 +1,5 @@
 env:
-  # TERM: xterm-256color
-  TERM: alacritty
+  TERM: xterm-256color
 
 window:
   dimensions:
@@ -10,40 +9,16 @@ window:
     x: 0
     y: 0
   dynamic_padding: false
-  # decorations: none
   dynamic_title: true
-  opacity: 1.0
-
-  # Window title
-  title: Alacritty
-
-  # Window class (Linux/BSD only):
-  class:
-    # Application instance name
-    #instance: Alacritty
-    # General application class
-    general: Alacritty
-
-  # GTK theme variant (Linux/BSD only)
-  #
-  # Override the variant of the GTK theme. Commonly supported values are `dark`
-  # and `light`. Set this to `None` to use the default theme variant.
-  # gtk_theme_variant: dark
 
 scrolling:
-  history: 50000
+  history: 40000
   multiplier: 3
 
 font:
   normal:
     family: Fantasque Sans Mono
     style: Regular
-  # bold:
-  #   family: Fantasque Sans Mono
-  #   style: Bold
-  # italic:
-  #   family: Fantasque Sans Mono
-  #   style: Italic 
   size: 12.0
   offset:
     x: 0
@@ -56,33 +31,18 @@ draw_bold_text_with_bright_colors: true
 
 import:
   # Desert
-  - ~/.config/alacritty/desert.yml
-
-  # DEFAULT
-  # - ~/.config/alacritty/night_owlish_light.yaml
-  # - ~/.config/alacritty/papercolor_light.yaml
-
-  # Gruvbox
-  # - ~/.config/alacritty/gruvbox_dark.yml
-  # - ~/.config/alacritty/gruvbox_light.yml
-  # - ~/.config/alacritty/gruvbox_material.yml
-
-  # Tokyonight
-  # - ~/.config/alacritty/Tokyonight_Day.yml
-  # - ~/.config/alacritty/Tokyonight_Night.yml
-  # - ~/.config/alacritty/Tokyonight_Storm.yml
-
-  # solarized
-  # - ~/.config/alacritty/solarized_dark.yaml
-  # - ~/.config/alacritty/solarized_light.yaml
+  # - ~/.config/alacritty/desert.yml
 
   # Dracula
-  # - ~/.config/alacritty/dracula.yaml
+  - ~/.config/alacritty/dracula.yml
 
-  # Rose pine
-  # - ~/.config/alacritty/rose-pine.yml
-  # - ~/.config/alacritty/rose-pine-moon.yml
-  # - ~/.config/alacritty/rose-pine-dawn.yml
+bell:
+  animation: EaseOutExpo
+  duration: 0
+  color: '0xffffff'
+
+mouse_bindings:
+  - { mouse: Middle, action: PasteSelection }
 
 mouse:
   double_click: { threshold: 300 }
@@ -167,18 +127,3 @@ key_bindings:
 - {key: Down, mode: Search, action: SearchHistoryNext}
 - {key: Return, mode: Search|~Vi, action: SearchFocusNext}
 - {key: Return, mods: Shift, mode: Search|~Vi, action: SearchFocusPrevious}
-
-# debug:
-  # render_timer: true
-  #persistent_logging: false
-
-  # Log level
-  #   - Off
-  #   - Error
-  #   - Warn
-  #   - Info
-  #   - Debug
-  #   - Trace
-  #log_level: Warn
-  #print_events: false
-  #highlight_damage: false
