@@ -1,0 +1,33 @@
+# Colors (Desert)
+colors:
+  primary:
+    background: '#333333'
+    foreground: '#FFFFFF'
+  normal:
+    black: '#4D4D4D'
+    red: '#FF2B2B'
+    green: '#98FB98'
+    yellow: '#F0E68C'
+    blue: '#CD853F'
+    magenta: '#FFDEAD'
+    cyan: '#FFA0A0'
+    white: '#F5DEB3'
+  bright:
+    black: '#555555'
+    red: '#FF5555'
+    green: '#55FF55'
+    yellow: '#FFFF55'
+    blue: '#87CEFF'
+    magenta: '#FF55FF'
+    cyan: '#FFD700'
+    white: '#FFFFFF'
+  # dim:
+  #   black:   '0x000000'
+  #   red:     '0x8c3336'
+  #   green:   '0x7a8530'
+  #   yellow:  '0x97822e'
+  #   blue:    '0x506d8f'
+  #   magenta: '0x80638e'
+  #   cyan:    '0x497e7a'
+  #   white:   '0x9a9a9a'
+  indexed_colors: []
