@@ -1,34 +1,28 @@
 [user]
     name = "Sergey Silaev"
     email = "hello@8am.dev"
+    signingkey = /home/cwmid/.ssh/id_ed25519.pub
 [core]
-    autocrlf = false
-    precomposeunicode = true
     editor = /usr/bin/nvim
-    filemode = false
-    pager = delta
+[commit]
+	gpgsign = true
 [gpg]
-    program = gpg2
-[interactive]
-    diffFilter = delta --color-only
-[delta]
-    navigate = true    # use n and N to move between diff sections
-    light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-[merge]
-    conflictstyle = diff3
-[diff]
-    colorMoved = default
-[alias]
-    st = status -b
-    c = commit
-    co = checkout
-    br = branch
-    cp = cherry-pick
-    cps = cherry-pick -s
-    branches = branch -vv
-    slog = log --pretty=format:"%C(auto)%h%C(auto)%d\\ %C(auto,reset)%s\\ \\ [%C(auto,blue)%an%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)] -n 25"
-    glog = log --graph --pretty=format:"%C(auto,yellow)%h%C(auto)%d\\ %C(auto,reset)%s\\ \\ [%C(auto,blue)%an%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)]"
-    wlog = log --pretty=format:"%C(auto,yellow)%h%C(auto)%d%C(auto,reset)\\ by\\ %C(auto,blue)%an%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)%n\\ %s%n" --stat
-    wdiff = diff --word-diff=color
-    wshow = show --word-diff=color
-    gr = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    format = ssh
+; [merge]
+;     conflictstyle = diff3
+; [diff]
+;     colorMoved = default
+; [alias]
+;     st = status -b
+;     c = commit
+;     co = checkout
+;     br = branch
+;     cp = cherry-pick
+;     cps = cherry-pick -s
+;     branches = branch -vv
+;     slog = log --pretty=format:"%C(auto)%h%C(auto)%d\\ %C(auto,reset)%s\\ \\ [%C(auto,blue)%an%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)]"
+;     glog = log --graph --pretty=format:"%C(auto,yellow)%h%C(auto)%d\\ %C(auto,reset)%s\\ \\ [%C(auto,blue)%an%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)]"
+;     wlog = log --pretty=format:"%C(auto,yellow)%h%C(auto)%d%C(auto,reset)\\ by\\ %C(auto,blue)%an%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)%n\\ %s%n" --stat
+;     wdiff = diff --word-diff=color
+;     wshow = show --word-diff=color
+;     gr = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
