@@ -1,0 +1,40 @@
+snippet cmt
+# ------------------------------------------------------------------------------
+#     - $1 -
+# ------------------------------------------------------------------------------$0
+endsnippet
+
+snippet main
+if __name__ == '__main__':
+	$0
+endsnippet
+
+snippet init
+def __init__(self, *args, **kwargs):
+	$0
+endsnippet
+
+snippet asd "async def" bwA
+async def $1:
+	return True
+endsnippet
+
+snippet pp "print" bwA
+print($1)
+endsnippet
+
+snippet lli "logger info" bwA
+logger.info($1)
+endsnippet
+
+snippet llw "logger warning" bwA
+logger.warning($1)
+endsnippet
+
+snippet ipdb "set breakpoint" bwA
+import ipdb; ipdb.set_trace()
+endsnippet
+
+snippet #!/ "set python header" bwA
+#!/usr/bin/python
+endsnippet
