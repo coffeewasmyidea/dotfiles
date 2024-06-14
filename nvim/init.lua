@@ -10,31 +10,46 @@ if not vim.g.vscode then
     vim.o.background = "dark" -- or "light" for light mode
     vim.cmd([[colorscheme gruvbox]])
 
-    -- LSP config
-    local lsp = require("lsp-zero")
-
-    lsp.on_attach(function(client, bufnr)
-      -- see :help lsp-zero-keybindings
-      -- to learn the available actions
-      lsp.default_keymaps({buffer = bufnr})
-    end)
-
     -- Mason
     require("mason").setup()
     require("mason-lspconfig").setup({
-    ensure_installed = {
-        "rust_analyzer",
-        "gopls",
-        "clangd",
-        "pyright",
-        "cmake",
-        "marksman",
-    },
-    automatic_installation = true,
-    handlers = {
-        lsp.default_setup,
+        ensure_installed = {
+            "rust_analyzer",
+            "gopls",
+            "clangd",
+            "pyright",
+            "cmake",
+            "marksman",
         },
+        automatic_installation = true,
     })
+
+    -- LSP config
+    local lsp = require("lsp-zero")
+
+    lsp.preset("recommended")
+    lsp.on_attach(function(client, bufnr)
+        -- see :help lsp-zero-keybindings
+        -- to learn the available actions
+        lsp.default_keymaps({buffer = bufnr})
+    end)
+
+    -- Setup handlers
+    require("mason-lspconfig").setup_handlers {
+        -- Default handler for all installed servers except rust_analyzer
+        function(server_name)
+            if server_name ~= "rust_analyzer" then
+                lsp.configure(server_name, {})
+            end
+        end,
+        -- Custom handler for rust_analyzer (inactive)
+        ["rust_analyzer"] = function()
+            -- No setup for rust_analyzer
+        end,
+    }
+
+    -- Apply lsp-zero settings
+    lsp.setup()
 
     local cmp = require("cmp")
     local cmp_action = require("lsp-zero").cmp_action()

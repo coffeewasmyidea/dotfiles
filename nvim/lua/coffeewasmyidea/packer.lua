@@ -55,7 +55,7 @@ return require("packer").startup(function()
     use("ray-x/guihua.lua")
 
     -- Rust
-     use("mrcjkb/rustaceanvim")
+    use("mrcjkb/rustaceanvim")
 
     -- Comments
     use("tpope/vim-commentary")
