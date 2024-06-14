@@ -122,8 +122,8 @@ nmap <Leader>S :Hexplore<CR>
 nmap <Leader>T :Texplore<CR>
 
 " Python
-let g:python3_host_prog = "/Users/cwm/.pyenv/shims/python"
-let g:black_linelength = 80
+let g:python3_host_prog = "$HOME/.pyenv/shims/python"
+let g:black_linelength = 120
 
 " ----------------------------------------------------------------------------
 "     - FUNCTIONS -

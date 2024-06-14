@@ -41,7 +41,7 @@ return require("packer").startup(function()
     use("williamboman/mason.nvim")
 
     -- Colorscheme
-    use { "Mofiqul/vscode.nvim" }
+    use { "ellisonleao/gruvbox.nvim" }
 
     -- Snips
     use("sirver/UltiSnips")
@@ -52,6 +52,7 @@ return require("packer").startup(function()
 
     -- Go
     use("ray-x/go.nvim")
+    use("ray-x/guihua.lua")
 
     -- Rust
      use("mrcjkb/rustaceanvim")
