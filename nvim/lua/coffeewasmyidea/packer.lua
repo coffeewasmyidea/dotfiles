@@ -73,7 +73,7 @@ return require("packer").startup(function()
     use("preservim/tagbar")
 
     -- Harpoon (The Primagen)
-    use("theprimeagen/harpoon")
+    use { "ThePrimeagen/harpoon", branch = "harpoon2", requires = { {"nvim-lua/plenary.nvim"} } }
 
     -- Undotree
     use("mbbill/undotree")
