@@ -26,6 +26,7 @@ if not vim.g.vscode then
 
     -- LSP config
     local lsp = require("lsp-zero")
+    local nvim_lsp = require'lspconfig'
 
     lsp.preset("recommended")
     lsp.on_attach(function(client, bufnr)
@@ -35,18 +36,26 @@ if not vim.g.vscode then
     end)
 
     -- Setup handlers
-    require("mason-lspconfig").setup_handlers {
-        -- Default handler for all installed servers except rust_analyzer
+    require("mason-lspconfig").setup_handlers({
+        -- Default handler for all installed servers except rust_analyzer and clangd
         function(server_name)
-            if server_name ~= "rust_analyzer" then
+            if server_name ~= "rust_analyzer" and server_name ~= "clangd" then
                 lsp.configure(server_name, {})
             end
         end,
-        -- Custom handler for rust_analyzer (inactive)
+
+        -- Custom handlers
         ["rust_analyzer"] = function()
             -- No setup for rust_analyzer
         end,
-    }
+        ["clangd"] = function()
+            lsp.configure("clangd", {
+                filetypes = { "c", "cpp", "objc", "objcpp" },
+                root_dir = nvim_lsp.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
+            })
+        end,
+
+    })
 
     -- Apply lsp-zero settings
     lsp.setup()
