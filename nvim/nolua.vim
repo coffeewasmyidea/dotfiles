@@ -114,6 +114,7 @@ nmap S :%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 let g:netrw_winsize = 15
+let g:netrw_list_hide='\(^\|\s\s\)\zs\.\S\+'
 
 " Explore
 nmap <Leader>e :Ex<CR>
