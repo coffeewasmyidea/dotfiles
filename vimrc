@@ -1,4 +1,11 @@
-" general config
+" ----------------------------------------------------------------------------
+"     VIM config
+"     Sergey Silaev <hello@8am.dev>
+"     date: 07-21-2024
+"
+" ----------------------------------------------------------------------------
+"
+" Requirements: ripgrep, fzf, ctags
 "
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -53,7 +60,7 @@ au BufNew,BufEnter,BufWinEnter,WinEnter,BufNew * match ExtraWhitespace /\s\+$/
 set background=dark
 
 let g:gruvbox_italic=1
-" colorscheme gruvbox
+colorscheme gruvbox
 
 " Show unprintable chars
 set list
