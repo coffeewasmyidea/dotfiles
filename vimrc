@@ -1,11 +1,31 @@
 " general config
+"
+" curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+"     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+call plug#begin()
+Plug 'rust-lang/rust.vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'preservim/tagbar'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'cespare/vim-toml'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'easymotion/vim-easymotion'
+Plug 'jreybert/vimagit'
+Plug 'morhetz/gruvbox'
+call plug#end()
+
+set nocompatible
 set term=xterm-256color
 set termguicolors
 set cscopeverbose
 set cscopetag
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 set autoindent
 set smartindent
@@ -24,11 +44,20 @@ set autochdir
 filetype on
 filetype plugin indent on
 
-" highlighting and color
+" highlighting color and extra whitespaces at the end
 syntax on
+highlight ExtraWhitespace ctermbg=red guibg=red
+au BufNew,BufEnter,BufWinEnter,WinEnter,BufNew * match ExtraWhitespace /\s\+$/
 
 " colorscheme
-colorscheme desert
+set background=dark
+
+let g:gruvbox_italic=1
+" colorscheme gruvbox
+
+" Show unprintable chars
+set list
+set listchars=tab:⁞\ ,eol:¬
 
 " Better Netrw
 let g:netrw_banner = 0
@@ -38,9 +67,9 @@ let g:netrw_liststyle = 3
 let g:netrw_winsize = 25
 
 " Exception for C, Go and yaml
-au! BufNewFile,BufReadPost *.{c,h} set filetype=c
-au! BufNewFile,BufReadPost *.{go} set filetype=go
-au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
+au! BufNewFile,BufReadPost *.{c,h} set ft=c
+au! BufNewFile,BufReadPost *.{go} set ft=go
+au! BufNewFile,BufReadPost *.{yaml,yml} set ft=yaml
 au FileType c setlocal noexpandtab
 au FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 au FileType sh setlocal ts=2 sts=2 sw=2 expandtab
@@ -87,7 +116,14 @@ nmap S :%s//g<Left><Left>
 nmap <F3> :set number!<CR>
 
 " trailing whitespace
-nmap <F2> :FixWhitespace<CR>
+function! RemoveTrailingSpaces()
+    let save_cursor = getpos(".")
+    %s/\s\+$//e
+    call setpos('.', save_cursor)
+endfunction
+
+command! RemoveTrailingSpaces call RemoveTrailingSpaces()
+nnoremap <F2> :RemoveTrailingSpaces<CR>
 
 " Explore
 nnoremap <leader>e :Ex<CR>
@@ -109,3 +145,10 @@ vnoremap J :m '>+1<CR>gv=gv
 
 " noh
 nmap <Leader><space> :noh<cr>
+
+" Tagbar
+nmap <F8> :TagbarToggle<CR>
+
+" Fzf
+nnoremap <C-f> :Rg<CR>
+nnoremap <C-p> :Files<CR>
