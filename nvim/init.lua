@@ -7,8 +7,9 @@ if not vim.g.vscode then
     require("coffeewasmyidea")
 
 -- Color scheme
-    vim.o.background = "dark" -- or "light" for light mode
-    vim.cmd([[colorscheme gruvbox]])
+    vim.o.background = "light" -- or "light" for light mode
+    -- vim.cmd([[colorscheme gruvbox]])
+    vim.cmd([[colorscheme solarized]])
 
     -- Mason
     require("mason").setup()
