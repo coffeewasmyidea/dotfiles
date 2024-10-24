@@ -43,7 +43,6 @@ return require("packer").startup(function()
     -- Colorscheme
     use { "ellisonleao/gruvbox.nvim" }
     use { "maxmx03/solarized.nvim" }
-    use { "Mofiqul/vscode.nvim" }
 
     -- Snips
     use("sirver/UltiSnips")
