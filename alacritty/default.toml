@@ -1,26 +1,32 @@
+# Original theme somewhere here https://github.com/romainl/Apprentice
+
 [colors]
-indexed_colors = []
+  [colors.primary]
+    background = "0x323232"
+    foreground = "0xc8c8c8"
 
-[colors.bright]
-black = "0x4d4d4d"
-blue = "0xcaa9fa"
-cyan = "0x9aedfe"
-green = "0x5af78e"
-magenta = "0xff92d0"
-red = "0xff6e67"
-white = "0xe6e6e6"
-yellow = "0xf4f99d"
+  [colors.cursor]
+    text = "0xfeffff"
+    cursor = "0xc7c7c7"
 
-[colors.normal]
-black = "0x000000"
-blue = "0xbd93f9"
-cyan = "0x8be9fd"
-green = "0x50fa7b"
-magenta = "0xff79c6"
-red = "0xff5555"
-white = "0xbfbfbf"
-yellow = "0xf1fa8c"
+  [colors.normal]
+    black = "0x252525"
+    blue = "0xbe7472"
 
-[colors.primary]
-background = "0x282a36"
-foreground = "0xf8f8f2"
+    cyan = "0x709772"
+    green = "0x989772"
+    magenta = "0x7199bc"
+    red = "0x727399"
+    white = "0x719899"
+    yellow = "0x7f7f7f"
+
+  [colors.bright]
+    black = "0x555555"
+    blue = "0xff9900"
+    cyan = "0x97bb98"
+    green = "0xfefdbc"
+    magenta = "0x9fbdde"
+    red = "0xaf5f5f"
+    white = "0x6fbbbc"
+    yellow = "0xfeffff"
+
