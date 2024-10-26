@@ -7,7 +7,7 @@ if not vim.g.vscode then
     require("coffeewasmyidea")
 
 -- Color scheme
-    vim.o.background = "dark"
+    vim.o.background = "dark" -- theme-color
     vim.cmd([[colorscheme gruvbox]])
     -- vim.cmd([[colorscheme solarized]])
 
