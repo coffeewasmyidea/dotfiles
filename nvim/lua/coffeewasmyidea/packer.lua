@@ -40,10 +40,6 @@ return require("packer").startup(function()
     -- Mason
     use("williamboman/mason.nvim")
 
-    -- Colorscheme
-    use { "ellisonleao/gruvbox.nvim" }
-    use { "maxmx03/solarized.nvim" }
-
     -- Snips
     use("sirver/UltiSnips")
 

@@ -3,13 +3,11 @@ vim.cmd(":so $HOME/.config/nvim/nolua.vim")
 
 -- VSCode extension
 if not vim.g.vscode then
-    -- ordinary Neovim
+    -- Ordinary Neovim
     require("coffeewasmyidea")
 
 -- Color scheme
-    vim.o.background = "dark" -- theme-color
-    vim.cmd([[colorscheme gruvbox]])
-    -- vim.cmd([[colorscheme solarized]])
+    vim.cmd([[colorscheme habamax]])
 
     -- Mason
     require("mason").setup()
