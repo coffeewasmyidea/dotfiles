@@ -1,9 +1,4 @@
-# import = ["~/.config/alacritty/default.toml"
-# import = ["~/.config/alacritty/konsole_linux.toml"]
-# import = ["~/.config/alacritty/github_light.toml"]
-# import = ["~/.config/alacritty/konsole_linux.toml"] # theme-color
-# import = ["~/.config/alacritty/solarized_light.toml"]
-# import = ["~/.config/alacritty/vscode_light.toml"]
+import = ["~/.config/alacritty/dracula.toml"]
 
 live_config_reload = true
 
@@ -30,12 +25,12 @@ x = 0
 y = 0
 
 [font.normal]
-family = "DejaVu Sans Mono"
-style = "Book"
+family = "Fira Code"
+style = "Light"
 
-[font.italic]
-family = "DejaVu Sans Mono"
-style = "Oblique"
+[font.bold]
+family = "Fira Code"
+style = "Regular"
 
 [font.offset]
 x = 0
