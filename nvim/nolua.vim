@@ -1,7 +1,7 @@
-" ----------------------------------------------------------------------------
+"nvim/nolua.vim ----------------------------------------------------------------------------
 "     NVIM config
 "     Sergey Silaev <hello@8am.dev>
-"     date: 10-24-2024
+"     date: 01-21-2025
 "
 " ----------------------------------------------------------------------------
 
@@ -37,6 +37,7 @@ set laststatus=2
 set undodir=$HOME/.cache/nvim/undodir
 set undofile
 set colorcolumn=+1
+set tags=./.git/tags;/
 
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
@@ -51,7 +52,9 @@ set clipboard=unnamedplus
 let g:UltiSnipsExpandTrigger = '<leader>t'
 
 " Number
-nmap <F3> :set rnu! nu!<CR>
+" nmap <F3> :set rnu! nu!<CR>
+set nu
+nmap <F3> :set nu!<CR>
 
 " Tagbar
 nmap <F8> :TagbarToggle<CR>

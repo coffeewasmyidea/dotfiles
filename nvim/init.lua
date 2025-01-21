@@ -7,7 +7,10 @@ if not vim.g.vscode then
     require("coffeewasmyidea")
 
 -- Color scheme
-    vim.cmd([[colorscheme habamax]])
+    -- vim.cmd([[colorscheme habamax]])
+
+    vim.o.background = "dark" -- or "light" for light mode
+    vim.cmd([[colorscheme gruvbox]])
 
     -- Mason
     require("mason").setup()
@@ -234,8 +237,5 @@ if not vim.g.vscode then
 
     -- Statusline
     vim.cmd("set statusline=%<%f\\ %h%m%r%=%-16.(%y\\ %l,%c\\ %)\\ %P\\ \\ ")
-
-    -- Go
-    require("go").setup()
 
 end

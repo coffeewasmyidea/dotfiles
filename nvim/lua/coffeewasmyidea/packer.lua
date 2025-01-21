@@ -47,9 +47,8 @@ return require("packer").startup(function()
     use("lewis6991/gitsigns.nvim")
     use("tpope/vim-fugitive")
 
-    -- Go
-    use("ray-x/go.nvim")
-    use("ray-x/guihua.lua")
+    -- Colorschema
+    use {"ellisonleao/gruvbox.nvim"}
 
     -- Rust
     use("mrcjkb/rustaceanvim")
@@ -80,7 +79,7 @@ return require("packer").startup(function()
 
     -- Others
     use("onsails/lspkind-nvim")
-    use("nvim-treesitter/nvim-treesitter")
+    -- use("nvim-treesitter/nvim-treesitter")
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
